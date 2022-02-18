@@ -870,9 +870,10 @@ Convert the current path to an array of polygons.
 
 Returns an array of polygons, corresponding to the paths and subpaths of the original path.
 """
-function pathtopoly()
+function pathtopoly(co_state=false)
     originalpath = getpathflat()
     polygonlist = Array{Point, 1}[] ; sizehint!(polygonlist, length(originalpath))
+    co_states = Bool[]; sizehint!(co_states,length(polygonlist))
     if length(originalpath) > 0
         pointslist = Point[]
         for e in originalpath
@@ -883,9 +884,12 @@ function pathtopoly()
             elseif e.element_type == Cairo.CAIRO_PATH_CLOSE_PATH         # 3
                 if last(pointslist) == first(pointslist)
                     # don’t repeat first point, we can close it ourselves
+                    push!(co_states,true)
                     if length(pointslist) > 2
                         pop!(pointslist)
                     end
+                else
+                    push!(co_states,false)
                 end
                 push!(polygonlist, pointslist)
                 pointslist = Point[]
@@ -896,10 +900,16 @@ function pathtopoly()
         end
         # the path was never closed, so flush
         if length(pointslist) > 0
+            push!(co_states,false)
             push!(polygonlist, pointslist)
         end
     end
-    return polygonlist
+    if co_state==false
+        return polygonlist
+    else
+        @assert length(polygonlist) == length(co_states)
+        return polygonlist,co_states
+    end
 end
 
 """
