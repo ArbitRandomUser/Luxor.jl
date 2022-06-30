@@ -66,6 +66,7 @@ include("graphlayout.jl")
 include("randompoints.jl")
 include("Style.jl")
 include("Path.jl")
+include("for_javis.jl")
 # include("latex.jl")
 # include("play.jl") # will require MiniFB
 # include("shapefile.jl") # don't load unless you've loaded Shapefile.jl
