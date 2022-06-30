@@ -160,14 +160,41 @@ closepath() = Cairo.close_path(get_current_cr())
 Stroke the current path with the current line width, line join, line cap, dash,
 and stroke scaling settings. The current path is then cleared.
 """
-strokepath() = get_current_strokescale() ? Cairo.stroke_transformed(get_current_cr()) : Cairo.stroke(get_current_cr())
-
+function strokepath()
+    if !isdefined(Main,:Javis)
+        return get_current_strokescale() ?
+        Cairo.stroke_transformed(Luxor.get_current_cr()) :
+        Cairo.stroke(get_current_cr())
+    end
+    if Main.Javis.CURRENT_FETCHPATH_STATE
+        update_currentjpath(:stroke) 
+    end
+    if !Main.Javis.DISABLE_LUXOR_DRAW
+        return get_current_strokescale() ?
+        Cairo.stroke_transformed(Luxor.get_current_cr()) :
+        stroke(Luxor.get_current_cr())
+    else
+        newpath()
+    end
+end
 """
     fillpath()
 
 Fill the current path according to the current settings. The current path is then cleared.
 """
-fillpath() = Cairo.fill(get_current_cr())
+function fillpath()
+    if !isdefined(Main,:Javis)
+        return Luxor.Cairo.fill(Luxor.get_current_cr())
+    end
+    if Main.Javis.CURRENT_FETCHPATH_STATE
+        update_currentjpath(:fill)
+    end
+    if !Main.Javis.DISABLE_LUXOR_DRAW
+        Luxor.Cairo.fill(Luxor.get_current_cr())
+    else
+        newpath()
+    end
+end
 
 """
     paint()
@@ -182,14 +209,38 @@ paint() = Cairo.paint(get_current_cr())
 Stroke the current path with current line width, line join, line cap, dash, and
 stroke scaling settings, but then keep the path current.
 """
-strokepreserve()    = get_current_strokescale() ? Cairo.stroke_preserve_transformed(get_current_cr()) : Cairo.stroke_preserve(get_current_cr())
+function strokepreserve()
+    if !isdefined(Main,:Javis)
+        return Luxor.get_current_strokescale() ?
+        Luxor.Cairo.stroke_preserve_transformed(Luxor.get_current_cr()) :
+        Luxor.Cairo.stroke_preserve(Luxor.get_current_cr())
+    end
+    if Main.Javis.CURRENT_FETCHPATH_STATE
+        update_currentjpath(:stroke)
+    end
+    if !Main.Javis.DISABLE_LUXOR_DRAW
+        get_current_strokescale() ?
+        Cairo.stroke_preserve_transformed(Luxor.get_current_cr()) :
+        Cairo.stroke_preserve(Luxor.get_current_cr())
+    end
 
+end
 """
     fillpreserve()
 
 Fill the current path with current settings, but then keep the path current.
 """
-fillpreserve()      = Cairo.fill_preserve(get_current_cr())
+function fillpreserve()
+    if !isdefined(Main,:Javis)
+        Luxor.Cairo.fill_preserve(Luxor.get_current_cr())
+    end
+    if Main.Javis.CURRENT_FETCHPATH_STATE
+        update_currentjpath(:fill)
+    end
+    if !Main.Javis.DISABLE_LUXOR_DRAW
+        Luxor.Cairo.fill_preserve(Luxor.get_current_cr())
+    end
+end
 
 """
     fillstroke()
