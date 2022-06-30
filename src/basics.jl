@@ -232,7 +232,7 @@ Fill the current path with current settings, but then keep the path current.
 """
 function fillpreserve()
     if !isdefined(Main,:Javis)
-        Luxor.Cairo.fill_preserve(Luxor.get_current_cr())
+        return Luxor.Cairo.fill_preserve(Luxor.get_current_cr())
     end
     if Main.Javis.CURRENT_FETCHPATH_STATE
         update_currentjpath(:fill)
