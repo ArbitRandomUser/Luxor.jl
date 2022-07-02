@@ -165,7 +165,7 @@ function strokepath()
         Main.Javis.javis_do_action(:stroke)
     else
         return get_current_strokescale() ?
-        Cairo.stroke_transformed(Luxor.get_current_cr()) :
+        Cairo.stroke_transformed(get_current_cr()) :
         Cairo.stroke(get_current_cr())
     end
 end
@@ -178,7 +178,7 @@ function fillpath()
     if  isdefined(Main,:Javis) && typeof(Main.Javis)==Module
         Main.Javis.javis_do_action(:fill)
     else
-        return Luxor.Cairo.fill(Luxor.get_current_cr())
+        return Cairo.fill(get_current_cr())
     end
 end
 
@@ -199,9 +199,9 @@ function strokepreserve()
     if isdefined(Main,:Javis) && typeof(Main.Javis) == Module
         Main.Javis.javis_do_action(:strokepreserve)
     else
-        return Luxor.get_current_strokescale() ?
-        Luxor.Cairo.stroke_preserve_transformed(Luxor.get_current_cr()) :
-        Luxor.Cairo.stroke_preserve(Luxor.get_current_cr())
+        return get_current_strokescale() ?
+        Cairo.stroke_preserve_transformed(get_current_cr()) :
+        Cairo.stroke_preserve(get_current_cr())
     end
 end
 """
@@ -213,7 +213,7 @@ function fillpreserve()
     if isdefined(Main,:Javis) && typeof(Main.Javis) == Module
         Main.Javis.javis_do_action(:fillpreserve)
     else
-        return Luxor.Cairo.fill_preserve(Luxor.get_current_cr())
+        return Cairo.fill_preserve(get_current_cr())
     end
 end
 
